@@ -1,5 +1,36 @@
 const HummusRecipe = require('hummus-recipe');
+const csv_parse = require('csv-parse/lib/sync')
+const fs = require('fs')
 
+const deelnemers_lijst = fs.readFileSync("Resources/deelnemers.csv")
+const categorie_lijst = fs.readFileSync("Resources/categorie.csv")
+
+const deelnemers = csv_parse(deelnemers_lijst, {columns:true});
+const categorie = csv_parse(categorie_lijst, { columns: true });
+
+var samengevoegde_lijst = [];
+
+for( deelnemer of deelnemers ) {
+    // zoek categorie van deze deelnemer
+    if ( deelnemer ) {
+        var lid = categorie.find((value, index, array) => {
+            return deelnemer.VOORNAAM.toUpperCase() == value.VOORNAAM.toUpperCase() && deelnemer.FAMILIENAAM.toUpperCase() == value.FAMILIENAAM.toUpperCase();
+        });
+        if (!lid) {
+            console.error("DIT LID WERD NIET GEVONDEN EN WAS NIET MEE OP KAMP!");
+            console.error(deelnemer);
+            exit(1);
+        }
+
+        samengevoegde_lijst.push(Object.assign({}, deelnemer, lid));
+    }
+}
+
+console.log(samengevoegde_lijst);
+
+for ( deelnemer of samengevoegde_lijst ) {
+
+}
 const pdfDoc = new HummusRecipe('Resources/FiscaalAttest2018.pdf', 'Out/FiscaalAttest2018_out.pdf');
 
 pdfDoc
