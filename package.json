@@ -1,0 +1,14 @@
+{
+  "name": "fiscaal_attest_schrijver",
+  "version": "1.0.0",
+  "description": "tool om automatisch de fiscale attesten voor zomerkamp te genereren en door te mailen naar de ouders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hummus-recipe": "^1.6.9"
+  }
+}
