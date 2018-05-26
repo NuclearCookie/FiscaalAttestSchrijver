@@ -5,8 +5,13 @@ const csv_parse = require('csv-parse/lib/sync')
 const fs = require('fs')
 const moment = require('moment')
 
+var send = require('gmail-send');
+
 const deelnemers_lijst = fs.readFileSync("Resources/deelnemers.csv")
 const categorie_lijst = fs.readFileSync("Resources/categorie.csv")
+const email_config = fs.readFileSync("Resources/email_config.json")
+
+send = send(JSON.parse(email_config));
 
 const deelnemers = csv_parse(deelnemers_lijst, {columns:true});
 const categorie = csv_parse(categorie_lijst, { columns: true });
@@ -18,7 +23,6 @@ const start_bever_kamp = moment("2017-07-19", "YYYY-MM-DD");
 const einde_kamp = moment("2017-07-29", "YYYY-MM-DD");
 const einde_bever_kamp = moment("2017-07-24", "YYYY-MM-DD");
 
-moment()
 for( deelnemer of deelnemers ) {
     // zoek categorie van deze deelnemer
     if ( deelnemer ) {
@@ -64,6 +68,20 @@ for( deelnemer of deelnemers ) {
 console.log(samengevoegde_lijst);
 const today = moment();
 
+const email_body =
+`Beste ouders,
+
+Uw kind ging vorig jaar mee met ons op kamp als -12 jarige.
+Hiervoor krijgt u in bijlage een fiscaal attest om bij uw belastingsaangifte te voegen.
+
+Bij vragen, opmerkingen of foutieve data, gelieve mij een mailtje terug te sturen.
+
+Met vriendelijke groeten,
+
+De eenheidsleiding
+eenheidsleiding@dealbatros.be
+`
+
 for( deelnemer of samengevoegde_lijst ) {
     // var deelnemer = {
     //     VOORNAAM : "Pieter",
@@ -72,9 +90,14 @@ for( deelnemer of samengevoegde_lijst ) {
     //     START_KAMP: start_kamp,
     //     EINDE_KAMP: einde_kamp,
     //     DAGEN: 11,
-    //     BEDRAG: 220
-    // }
-    const pdfDoc = new HummusRecipe('Resources/FiscaalAttest2018.pdf', `Out/FiscaalAttest2018_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`);
+    //     BEDRAG: 220,
+    //     "E-MAIL": "***@gmail.com",
+    //     "E-MAIL OUDER 1": "",
+    //     "E-MAIL OUDER 2": ""
+    // };
+
+    const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
+    const pdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', output_file);
 
     pdfDoc
         .editPage(2)
@@ -95,4 +118,13 @@ for( deelnemer of samengevoegde_lijst ) {
         .endPage()
         // end and save
         .endPDF();
+
+    send({
+        subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
+        to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
+        text: email_body,
+        files: [output_file]
+    }, (err, res) => {
+        console.log('* send() callback returned: err:', err, '; res:', res);
+    });
 }
