@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "csv-parse": "^2.4.0",
-    "hummus-recipe": "^1.6.9"
+    "hummus-recipe": "^1.6.9",
+    "moment": "^2.22.1"
   }
 }
