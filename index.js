@@ -50,13 +50,16 @@ for( deelnemer of deelnemers ) {
                 extra_info.EINDE_KAMP = einde_kamp;
             }
             extra_info.DAGEN = extra_info.EINDE_KAMP.diff(extra_info.START_KAMP, "days") + 1;
-            // verjaart op kamp :TODO: nakijken wat de regeling hier rond is.
-
-            // if ( einde_kamp.diff(geboorte_datum, 'year') == 12 ) {
-            //     const dagen_plus_12 = einde_kamp.clone().subtract({years:12}).diff(geboorte_datum, 'days');
-            //     extra_info.DAGEN -= dagen_plus_12 - 1;
-            // }
             lid.BEDRAG = parseFloat(lid.BEDRAG.replace("€", ""));
+            extra_info.DAG_TARIEF = lid.BEDRAG / extra_info.DAGEN;
+            // verjaart op kamp
+
+            if ( einde_kamp.diff(geboorte_datum, 'year') == 12 ) {
+                const dagen_plus_12 = einde_kamp.clone().subtract({years:12}).diff(geboorte_datum, 'days');
+                extra_info.DAGEN -= ( dagen_plus_12 + 1 );
+                lid.BEDRAG = extra_info.DAG_TARIEF * extra_info.DAGEN;
+                extra_info.EINDE_KAMP = geboorte_datum;
+            }
             samengevoegde_lijst.push(Object.assign({}, deelnemer, lid, extra_info));
         } else {
             //console.log("Deelnemer was +12");
@@ -110,7 +113,7 @@ for( deelnemer of samengevoegde_lijst ) {
         .text(deelnemer.EINDE_KAMP.format("MM"), 163, 266, { size: 10 })
         .text(deelnemer.EINDE_KAMP.format("YY"), 186, 266, { size: 10 })
         .text("" + deelnemer.DAGEN, 150, 315)
-        //.text("" + deelnemer.BEDRAG / deelnemer.DAGEN, 130, 348)
+        //.text("" + deelnemer.DAG_TARIEF, 130, 348)
         .text(deelnemer.BEDRAG, 175, 375)
         //.text("Knokke-Heist", 300, 432, { size: 8 })
         .text(today.format("DD"), 400, 432, { size: 8 })
