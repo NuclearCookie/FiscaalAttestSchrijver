@@ -84,40 +84,39 @@ Met vriendelijke groeten,
 De eenheidsleiding
 eenheidsleiding@dealbatros.be
 `
-
+var count = 0;
 for( deelnemer of samengevoegde_lijst ) {
-    // var deelnemer = {
-    //     VOORNAAM : "Pieter",
-    //     FAMILIENAAM : "Vantorre",
-    //     GEBOORTEDATUM : "1995-05-29",
-    //     START_KAMP: start_kamp,
-    //     EINDE_KAMP: einde_kamp,
-    //     DAGEN: 11,
-    //     BEDRAG: 220,
-    //     "E-MAIL": "***@gmail.com",
-    //     "E-MAIL OUDER 1": "",
-    //     "E-MAIL OUDER 2": ""
-    // };
-
     const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
     const pdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', output_file);
 
+    const date_height = 286;
+    const date_x = 120;
+
+    ++count;
+
     pdfDoc
         .editPage(2)
-        .text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 200, 175)
-        .text(deelnemer.GEBOORTEDATUM, 190, 208)
-        // .text(deelnemer.START_KAMP.format("DD"), 76, 266, { size: 10 })
-        // .text(deelnemer.START_KAMP.format("MM"), 93, 266, { size: 10 })
-        // .text(deelnemer.START_KAMP.format("YY"), 116, 266, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("DD"), 146, 266, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("MM"), 163, 266, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("YY"), 186, 266, { size: 10 })
-        .text("" + deelnemer.DAGEN, 150, 315)
-        //.text("" + deelnemer.DAG_TARIEF, 130, 348)
-        .text(deelnemer.BEDRAG, 175, 375)
-        //.text("Knokke-Heist", 300, 432, { size: 8 })
-        .text(today.format("DD"), 400, 432, { size: 8 })
-        .text(today.format("MM"), 415, 432, { size: 8 })
+        .text(`${count}`, 235, 157)
+        .text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 95, 212)
+        .text(deelnemer.GEBOORTEDATUM, 95, 240)
+        .text(deelnemer.START_KAMP.format("DD"), date_x, date_height, { size: 10 })
+        .text(deelnemer.START_KAMP.format("MM"), date_x + 20, date_height, { size: 10 })
+        .text(deelnemer.START_KAMP.format("YY"), date_x + 50, date_height, { size: 10 })
+        .text(deelnemer.EINDE_KAMP.format("DD"), date_x + 90, date_height, { size: 10 })
+        .text(deelnemer.EINDE_KAMP.format("MM"), date_x + 110, date_height, { size: 10 })
+        .text(deelnemer.EINDE_KAMP.format("YY"), date_x + 140, date_height, { size: 10 })
+        .text("" + deelnemer.DAGEN, 95, 328)
+        .text("" + deelnemer.DAG_TARIEF, 160, 344)
+        .text(deelnemer.BEDRAG, 225, 358)
+        .text("Knokke-Heist", 200, 391, { size: 9 })
+        .text(today.format("DD"), 333, 391, { size: 9 })
+        .text(today.format("MM"), 350, 391, { size: 9 })
+        .text(today.format("YY"), 378, 391, { size: 9 })
+        .text("Pieter Vantorre", 120, 405, { size: 12 })
+        .text("Eenheidsleiding", 120, 420, { size: 12 })
+        .text("102e FOS Open Scouting: de Albatros", 95, 568, { size: 12 })
+        .text("Smedenstraat 125", 95, 582, { size: 12 })
+        .text("8300 Knokke-Heist", 95, 596, { size: 12 })
         .endPage()
         // end and save
         .endPDF();
