@@ -1,5 +1,19 @@
 # Genereer Fiscale attesten voor 102e FOS de Albatros
 
+## Configuratie:
+In index.js pas je de start en eind data aan van de kampen:
+
+```
+const start_kamp = moment("2017-07-19", "YYYY-MM-DD");
+const start_bever_kamp = moment("2017-07-19", "YYYY-MM-DD");
+const einde_kamp = moment("2017-07-29", "YYYY-MM-DD");
+const einde_bever_kamp = moment("2017-07-24", "YYYY-MM-DD");
+```
+
+Onderaan staat ook de `send` methode. Deze haal je uit commentaar om de emails naar ouders te versturen. 
+
+In de `pdfdoc` functie zal je mogelijks ook de offsets van elk veld moeten aanpassen, afhankelijk van de scan, en de financieel verantwoordelijke zal je ook moeten aanpassen.
+
 ## Nodige documenten:
 
 ### `Resources/deelnemers.csv`:
@@ -10,6 +24,7 @@ ledenlijst van deelnemende kinderen aan zomerkamp 20xx.
 * Exporteren als tabel
 * Alles selecteren
 * plakken in een nieuwe google sheet
+* Categorieën verwijderen (samengevoegde cellen)
 * Downloaden als csv
 
 ### `Resources/categorie.csv`:
@@ -41,6 +56,11 @@ Als je 2factor authentication gebruikt (code met je gsm, volg dan volgende stapp
 > To be able send emails using GMail from any application (including Node.js) you need to generate application-specific password to access GMail: [My Account](https://myaccount.google.com/) -> [Sign-in & security](https://myaccount.google.com/security) -> [Signing in to Google](https://myaccount.google.com/security#signin) -> [App passwords](https://security.google.com/settings/security/apppasswords?utm_source=OGB&pli=1)
 
 > Select 'Other (Custom name)' in 'Select app'/'Select device' drop-downs, enter descriptive name for your application and device and press 'GENERATE'. Copy provided password.
+
+
+## Genereren
+
+Run `node index.js`
 
 ## Testen
 

@@ -18,10 +18,10 @@ const categorie = csv_parse(categorie_lijst, { columns: true });
 
 var samengevoegde_lijst = [];
 
-const start_kamp = moment("2017-07-19", "YYYY-MM-DD");
-const start_bever_kamp = moment("2017-07-19", "YYYY-MM-DD");
-const einde_kamp = moment("2017-07-29", "YYYY-MM-DD");
-const einde_bever_kamp = moment("2017-07-24", "YYYY-MM-DD");
+const start_kamp = moment("2018-07-21", "YYYY-MM-DD");
+const start_bever_kamp = moment("2018-07-21", "YYYY-MM-DD");
+const einde_kamp = moment("2018-07-31", "YYYY-MM-DD");
+const einde_bever_kamp = moment("2018-07-26", "YYYY-MM-DD");
 
 for( deelnemer of deelnemers ) {
     // zoek categorie van deze deelnemer
@@ -121,12 +121,12 @@ for( deelnemer of samengevoegde_lijst ) {
         // end and save
         .endPDF();
 
-    send({
-        subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
-        to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
-        text: email_body,
-        files: [output_file]
-    }, (err, res) => {
-        console.log('* send() callback returned: err:', err, '; res:', res);
-    });
+    // send({
+    //     subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
+    //     to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
+    //     text: email_body,
+    //     files: [output_file]
+    // }, (err, res) => {
+    //     console.log('* send() callback returned: err:', err, '; res:', res);
+    // });
 }
