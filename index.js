@@ -1,6 +1,6 @@
 // :TODO: SOMFonds. leden aan verlaagd tarief moeten aangepast document krijgen.
 
-const HummusRecipe = require('hummus-recipe');
+const HummusRecipe = require('hummus-recipe')
 const csv_parse = require('csv-parse/lib/sync')
 const fs = require('fs')
 const moment = require('moment')
@@ -68,7 +68,7 @@ for( deelnemer of deelnemers ) {
     }
 }
 
-console.log(samengevoegde_lijst);
+// console.log(samengevoegde_lijst);
 const today = moment();
 
 const email_body =
@@ -97,8 +97,8 @@ const small_text_settings = {
 }
 for( deelnemer of samengevoegde_lijst ) {
     const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
-    const tempPdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', 'Temp/Generated.pdf',
-    {
+    console.log(`Generating pdf for ${output_file}`);
+    const tempPdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', 'Temp/Generated.pdf', {
         version: 1.6,
         author: 'Pieter Vantorre',
         title: 'Fiscaal Attest',
@@ -140,23 +140,37 @@ for( deelnemer of samengevoegde_lijst ) {
         .endPage()
         // end and save
 
-        .endPDF(() =>
-        {
+        .endPDF(() =>{
             const pdfDoc = new HummusRecipe('new', output_file);
             pdfDoc
                 .appendPage("Temp/Generated.pdf")
-                .endPDF(() =>
-                {
-                    // send({
-                    //     subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
-                    //     to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
-                    //     text: email_body,
-                    //     files: [output_file]
-                    // }, (err, res) => {
-                    //     console.log('* send() callback returned: err:', err, '; res:', res);
-                    // });
-                });
+                .endPDF();
         });
-
-
 }
+
+// definition
+send_mail_recursive = (lijst, i) => {
+    if ( i > lijst.count )
+    {
+        return;
+    }
+    var deelnemer = lijst[i];
+    console.log(`Sending email for ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`);
+    const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
+    send({
+        subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
+        to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
+        text: email_body,
+        files: [output_file]
+    }, (err, res) => {
+        console.log('* send() callback returned: err:', err, '; res:', res);
+        if ( err ) {
+            console.log("failed. retry...");
+            send_mail_recursive(lijst, i);
+        } else {
+            send_mail_recursive(lijst, i+1);
+        }
+    });
+}
+
+send_mail_recursive(samengevoegde_lijst, 0);
