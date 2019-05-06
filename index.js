@@ -87,14 +87,20 @@ eenheidsleiding@dealbatros.be
 var count = 0;
 for( deelnemer of samengevoegde_lijst ) {
     const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
-    const pdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', output_file);
+    const tempPdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', 'Temp/Generated.pdf',
+    {
+        version: 1.6,
+        author: 'Pieter Vantorre',
+        title: 'Fiscaal Attest',
+        subject: 'Attest inzake uitgaven voor de opvang van kinderen van minder dan 12 jaar.'
+    });
 
     const date_height = 286;
     const date_x = 120;
 
     ++count;
 
-    pdfDoc
+    tempPdfDoc
         .editPage(2)
         .text(`${count}`, 235, 157)
         .text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 95, 212)
@@ -119,14 +125,24 @@ for( deelnemer of samengevoegde_lijst ) {
         .text("8300 Knokke-Heist", 95, 596, { size: 12 })
         .endPage()
         // end and save
-        .endPDF();
 
-    // send({
-    //     subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
-    //     to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
-    //     text: email_body,
-    //     files: [output_file]
-    // }, (err, res) => {
-    //     console.log('* send() callback returned: err:', err, '; res:', res);
-    // });
+        .endPDF(() =>
+        {
+            const pdfDoc = new HummusRecipe('new', output_file);
+            pdfDoc
+                .appendPage("Temp/Generated.pdf")
+                .endPDF(() =>
+                {
+                    // send({
+                    //     subject: `[FOS] Fiscaal Attest kamp -12 voor ${deelnemer.VOORNAAM} ${deelnemer.FAMILIENAAM}`,
+                    //     to: [deelnemer["E-MAIL"], deelnemer["E-MAIL OUDER 1"], deelnemer["E-MAIL OUDER 2"]],
+                    //     text: email_body,
+                    //     files: [output_file]
+                    // }, (err, res) => {
+                    //     console.log('* send() callback returned: err:', err, '; res:', res);
+                    // });
+                });
+        });
+
+
 }

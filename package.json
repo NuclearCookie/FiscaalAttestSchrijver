@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "csv-parse": "^2.4.0",
+    "csv-parse": "^2.5.0",
     "gmail-send": "^1.2.14",
-    "hummus-recipe": "^1.6.9",
-    "moment": "^2.22.1"
+    "hummus-recipe": "^1.8.7",
+    "moment": "^2.24.0"
   }
 }
