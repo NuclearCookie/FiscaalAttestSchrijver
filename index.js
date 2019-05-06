@@ -85,6 +85,16 @@ De eenheidsleiding
 eenheidsleiding@dealbatros.be
 `
 var count = 0;
+const medium_text_settings = {
+    color: '000000',
+    fontSize: 12,
+    font: 'Andes'
+}
+const small_text_settings = {
+    color: '000000',
+    fontSize: 8,
+    font: 'Andes'
+}
 for( deelnemer of samengevoegde_lijst ) {
     const output_file = `Out/FiscaalAttest${today.format("YYYY")}_${deelnemer.VOORNAAM}_${deelnemer.FAMILIENAAM}.pdf`;
     const tempPdfDoc = new HummusRecipe('Resources/FiscaalAttest.pdf', 'Temp/Generated.pdf',
@@ -92,37 +102,41 @@ for( deelnemer of samengevoegde_lijst ) {
         version: 1.6,
         author: 'Pieter Vantorre',
         title: 'Fiscaal Attest',
-        subject: 'Attest inzake uitgaven voor de opvang van kinderen van minder dan 12 jaar.'
+        subject: 'Attest inzake uitgaven voor de opvang van kinderen van minder dan 12 jaar.',
+        fontSrcPath: 'Resources/fonts/'
     });
 
-    const date_height = 286;
-    const date_x = 120;
+    const date_height = 284;
+    const date_x = 83;
 
     ++count;
 
     tempPdfDoc
         .editPage(2)
-        .text(`${count}`, 235, 157)
-        .text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 95, 212)
-        .text(deelnemer.GEBOORTEDATUM, 95, 240)
-        .text(deelnemer.START_KAMP.format("DD"), date_x, date_height, { size: 10 })
-        .text(deelnemer.START_KAMP.format("MM"), date_x + 20, date_height, { size: 10 })
-        .text(deelnemer.START_KAMP.format("YY"), date_x + 50, date_height, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("DD"), date_x + 90, date_height, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("MM"), date_x + 110, date_height, { size: 10 })
-        .text(deelnemer.EINDE_KAMP.format("YY"), date_x + 140, date_height, { size: 10 })
-        .text("" + deelnemer.DAGEN, 95, 328)
-        .text("" + deelnemer.DAG_TARIEF, 160, 344)
-        .text(deelnemer.BEDRAG, 225, 358)
-        .text("Knokke-Heist", 200, 391, { size: 9 })
-        .text(today.format("DD"), 333, 391, { size: 9 })
-        .text(today.format("MM"), 350, 391, { size: 9 })
-        .text(today.format("YY"), 378, 391, { size: 9 })
-        .text("Pieter Vantorre", 120, 405, { size: 12 })
-        .text("Eenheidsleiding", 120, 420, { size: 12 })
-        .text("102e FOS Open Scouting: de Albatros", 95, 568, { size: 12 })
-        .text("Smedenstraat 125", 95, 582, { size: 12 })
-        .text("8300 Knokke-Heist", 95, 596, { size: 12 })
+        .text(`${count}`, 200, 92, medium_text_settings)
+        /*.text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 95, 124, medium_text_settings)
+        .text(`${deelnemer.STRAAT} ${deelnemer.HUISNR}`, 95, 143, medium_text_settings)
+        .text(`${deelnemer.POSTCODE} ${deelnemer.WOONPLAATS}`, 95, 162, medium_text_settings)*/
+        .text(`${deelnemer.FAMILIENAAM} ${deelnemer.VOORNAAM}`, 205, 199, medium_text_settings)
+        .text(deelnemer.GEBOORTEDATUM, 187, 231, medium_text_settings)
+        .text(deelnemer.START_KAMP.format("DD"), date_x, date_height, small_text_settings)
+        .text(deelnemer.START_KAMP.format("MM"), date_x + 16, date_height, small_text_settings)
+        .text(deelnemer.START_KAMP.format("YY"), date_x + 40, date_height, small_text_settings)
+        .text(deelnemer.EINDE_KAMP.format("DD"), date_x + 67, date_height, small_text_settings)
+        .text(deelnemer.EINDE_KAMP.format("MM"), date_x + 84, date_height, small_text_settings)
+        .text(deelnemer.EINDE_KAMP.format("YY"), date_x + 108, date_height, small_text_settings)
+        .text("" + deelnemer.DAGEN, 160, 335, medium_text_settings)
+        .text("" + deelnemer.DAG_TARIEF, 130, 366, medium_text_settings)
+        .text(deelnemer.BEDRAG, 170, 397, medium_text_settings)
+        .text("Knokke-Heist", 300, 448, small_text_settings)
+        .text(today.format("DD"), 402, 448, small_text_settings)
+        .text(today.format("MM"), 415, 448, small_text_settings)
+        .text(today.format("YY"), 438, 448, small_text_settings)
+        .text("Pieter Vantorre", 80, 465, medium_text_settings)
+        .text("Eenheidsleiding", 80, 480, medium_text_settings)
+        .text("102e FOS Open Scouting: de Albatros", 45, 597, medium_text_settings)
+        .text("Smedenstraat 125", 45, 610, medium_text_settings)
+        .text("8300 Knokke-Heist", 45, 624, medium_text_settings)
         .endPage()
         // end and save
 
